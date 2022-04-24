@@ -51,12 +51,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
       return employee;
     }
-    
-
-
-
-
-
+   
   public void sendEmail(String toEmail,String subject,String body)
   {
 

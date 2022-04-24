@@ -183,6 +183,7 @@ import com.admindesk.models.ERole;
 import com.admindesk.models.LeaveModel;
 import com.admindesk.models.Role;
 import com.admindesk.models.User;
+import com.admindesk.payload.request.EmailRequest;
 import com.admindesk.payload.request.LoginRequest;
 import com.admindesk.payload.request.SignupRequest;
 import com.admindesk.payload.response.JwtResponse;
@@ -203,7 +204,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -267,10 +268,12 @@ public class AuthController {
     }
 
     // Create new user's account
-    User user = new User(signUpRequest.getFirstname(),signUpRequest.getLastname(),signUpRequest.getUsername(),signUpRequest.getEmail(),encoder.encode(signUpRequest.getPassword()),
+    User user = new User(signUpRequest.getFirstname(),signUpRequest.getLastname(),signUpRequest.getUsername(),
+    		signUpRequest.getEmail(),encoder.encode(signUpRequest.getPassword()),
             signUpRequest.getEmployeeId(),signUpRequest.getDesignation(),signUpRequest.getContact(),
             signUpRequest.getGender(),signUpRequest.getDateOfJoining(),signUpRequest.getAddress(),
-            signUpRequest.getCity(),signUpRequest.getState(),signUpRequest.getMstatus(),signUpRequest.getBloodGroup(),signUpRequest.getExtraLeave(),signUpRequest.getLeaveBalance(),signUpRequest.getLeaveTaken());
+            signUpRequest.getCity(),signUpRequest.getState(),signUpRequest.getMstatus(),
+            signUpRequest.getBloodGroup(),signUpRequest.getLeaveBalance());
 
     Set<String> strRoles = signUpRequest.getRole();
 
@@ -323,6 +326,11 @@ public class AuthController {
 
  }
  
+// @GetMapping("/user-detail/{id}")
+// public User getUserData(@PathVariable("id") Long id){
+// 	
+// 	return userRepository.findById(id).get();
+// }
  
  @GetMapping("/show-leaves")
  public List<LeaveModel> leaveList(){
@@ -337,19 +345,40 @@ public class AuthController {
  }
 
  @PostMapping("/change-status/{id}")
- public ResponseEntity<String> changeStatus(@PathVariable long id){
+ public ResponseEntity<?> changeStatus(@PathVariable("id") Long id,@RequestBody String status){
 	 LeaveModel leave = leaveRepository.findById(id).get();
-	 if(leave.getStatus().equals("Not Approved")) {
+	 User user = userRepository.getUserByEmpId(leave.getEmployeeId()).get(0);
+	 
+	 if(status.equals("Approved")) {
+//		 user.setLeaveBalance()
+		 user.setLeaveBalance(user.getLeaveBalance() - Integer.parseInt(leave.getCount()));
 		 leave.setStatus("Approved");
 	 }
 	 else {
 		 leave.setStatus("Not Approved");
 	 }
 	 
-	leaveRepository.save(leave); 
-	 return new ResponseEntity<String>("Status Changed", HttpStatus.OK);
+	 userDetailsService.sendEmail(user.getEmail(),"Leave Request Update", user.getFirstname() + " your leave status has"
+	 		+ "changed to "+ leave.getStatus());
+	 
+	 userDetailsService.sendEmail("sakshisikarwar967@gmail.com", "Leave Status Update", "You have changed leave status"
+	 		+ " of "+ user.getEmail() + " Employee Id " + user.getEmployeeId() + " to " + leave.getStatus());
+	leaveRepository.save(leave);
+
+	return ResponseEntity.ok(new MessageResponse("Changed Status successfully!"));
  }
+ @GetMapping("/user-detail/{id}")
+ public ResponseEntity<User> getUserData(@PathVariable("id") Long id){
+ 	
+ 	return ResponseEntity.ok(userRepository.findById(id).get());
  }
+ 
+ @PostMapping("/send-email")
+ public ResponseEntity<?> sendEmail(@RequestBody EmailRequest email){
+	 userDetailsService.sendEmail(email.getEmailId(), email.getSubject(), email.getMessage());
+	 return ResponseEntity.ok(new MessageResponse("Sent mail"));
+ }
+}
 
 
 

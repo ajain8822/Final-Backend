@@ -29,21 +29,40 @@ public class LeaveModel {
  private  String status;
 
  private String discription;
+ 
+ private String count;
 
+ public String getCount() {
+	return this.count;
+}
 
- public LeaveModel() {
+public void setCount(String count) {
+	this.count = count;
+}
+
+public LeaveModel() {
  }
 
- public LeaveModel(String employeeId, Date startDate, Date endDate , String leaveBalance ,String status,String discription ) {
+ public LeaveModel(String employeeId, Date startDate, Date endDate , String leaveBalance ,String status,String discription, String count ) {
   this.employeeId = employeeId;
   this.startDate = startDate;
   this.endDate = endDate;
   this.leaveBalance=leaveBalance;
   this.status=status;
   this.discription=discription;
+  this.count=count;
  }
 
- public String getEmployeeId() {
+ 
+ public long getId() {
+	return id;
+}
+
+public void setId(long id) {
+	this.id = id;
+}
+
+public String getEmployeeId() {
   return employeeId;
  }
 

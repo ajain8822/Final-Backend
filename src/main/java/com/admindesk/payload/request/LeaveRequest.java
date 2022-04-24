@@ -9,8 +9,27 @@ public class LeaveRequest {
     private String leaveBalance;
     private String status;
     private String discription;
+    private String emailId;
+    private String count;
+    
+    
+    public String getCount() {
+		return count;
+	}
 
-    public String getEmployeeId() {
+	public void setCount(String count) {
+		this.count = count;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
+	public String getEmployeeId() {
         return employeeId;
     }
 

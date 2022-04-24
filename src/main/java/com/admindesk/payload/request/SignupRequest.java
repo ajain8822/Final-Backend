@@ -35,15 +35,16 @@ public class SignupRequest {
 
   private String bloodGroup;
   
-  @Column(name="EXTRA_LEAVE")
-  private int extraLeave;
-
-  @Column(name = "LEAVE_BALANCE")
   private int leaveBalance;
-
-
-  @Column(name = "LEAVE_TAKEN")
-  private int leaveTaken;
+//  @Column(name="EXTRA_LEAVE")
+//  private int extraLeave;
+//
+//  @Column(name = "LEAVE_BALANCE")
+//  private int leaveBalance;
+//
+//
+//  @Column(name = "LEAVE_TAKEN")
+//  private int leaveTaken;
 
 
 
@@ -130,20 +131,11 @@ public class SignupRequest {
   public String  getBloodGroup(){ return bloodGroup;}
 
   public  void setBloodGroup(String bloodGroup){ this.bloodGroup=bloodGroup;}
- 
-  public int  getExtraLeave(){ return extraLeave;}
-
-  public  void setExtraLeave(int extraLeave){ this.extraLeave=extraLeave;}
-  
+   
   public int  getLeaveBalance(){ return leaveBalance;}
 
   public  void setLeaveBalance(int leaveBalance){ this.leaveBalance=leaveBalance;}
   
-  public int  getLeaveTaken(){ return leaveTaken;}
-
-  public  void setLeaveTaken(int leaveTaken){ this.leaveTaken=leaveTaken;}
-  
-
   public Set<String> getRole() {
     return this.role;
   }
